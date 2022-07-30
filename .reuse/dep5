@@ -3,6 +3,6 @@ Upstream-Name: Bulletin D JSON version
 Upstream-Contact: Jeff Epler <jepler@gmail.com>
 Source: https://github.com/jepler/bulletind
 
-Files: data/*.json
+Files: bulletind/data/*.json
 Copyright: Public Domain
 License: CC0-1.0
