@@ -25,9 +25,8 @@ jobs:
       with:
         python-version: 3.7
 
-    - name: Install for development
-      run: |
-        python -mpip install -e .
+    - name: Install package in development mode
+      run: pip install -e '.[dev]'
 
     - name: Test
       run: make coverage

@@ -42,10 +42,8 @@ jobs:
       with:
         python-version: ${{ matrix.python-version }}
 
-    - name: Install deps
-      run: |
-        python -mpip install wheel
-        python -mpip install -r requirements-dev.txt
+    - name: Install package in development mode
+      run: pip install -e '.[dev]'
 
     - name: Check stubs
       run: make mypy PYTHON=python
