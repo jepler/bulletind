@@ -1,16 +1,20 @@
 #!/usr/bin/python3
 """Retrieve 'bulletin D' data"""
 
+import datetime
 import json
 import os
 import pathlib
 import sys
 import typing
 import xml.etree.ElementTree
+from dataclasses import dataclass, field
 
 import bs4
 import platformdirs
 import requests
+from dataclasses_json import DataClassJsonMixin, config
+from marshmallow import fields
 
 # Copyright (C) 2022 Jeff Epler <jepler@gmail.com>
 # SPDX-FileCopyrightText: 2022 Jeff Epler
@@ -25,24 +29,28 @@ DATA_PATHS = [
 ]
 
 
-KEYS = [
-    ("number", int),
-    ("date", str),
-    ("startDate", str),
-    ("DUT1", float),
-    ("startUTC", float),
-]
-
-
-class BulletinDInfo(typing.TypedDict):
+@dataclass
+class BulletinDInfo(DataClassJsonMixin):
     """Type representing a Bulletin D dictionary"""
 
-    date: str
+    date: datetime.date = field(
+        metadata=config(
+            encoder=datetime.date.isoformat,
+            decoder=datetime.date.fromisoformat,
+            mm_field=fields.DateTime(format="iso"),
+        )
+    )
     dut1: float
     dut1_unit: str
     number: int
-    startdate: str
-    startutc: float
+    start_date: datetime.date = field(
+        metadata=config(
+            encoder=datetime.date.isoformat,
+            decoder=datetime.date.fromisoformat,
+            mm_field=fields.DateTime(format="iso"),
+        )
+    )
+    start_utc: float
 
 
 def cache(
@@ -56,7 +64,7 @@ def cache(
         loc = path / f"{base}.json"
         if loc.exists():
             with open(loc, "r", encoding="utf-8") as data_file:
-                return typing.cast(BulletinDInfo, json.load(data_file))
+                return BulletinDInfo.from_json(data_file.read())
 
     loc = cache_paths[0] / f"{base}.json"
     tmp_loc = cache_paths[0] / f"{base}.json.tmp"
@@ -64,22 +72,34 @@ def cache(
     print(f"Fetching {url} to {loc}", file=sys.stderr)
     buld_xml = requests.get(url).text
     doc = xml.etree.ElementTree.XML(buld_xml)
-    data = {}
-    for element_name, transformer in KEYS:
+
+    def find_el(element_name: str) -> xml.etree.ElementTree.Element:
         element = doc.find(f".//{{http://www.iers.org/2003/schema/iers}}{element_name}")
         assert element is not None
-        data[element_name.lower()] = transformer(element.text)
+        return element
 
-    element = doc.find(".//{http://www.iers.org/2003/schema/iers}DUT1")
-    assert element is not None
-    data["dut1_unit"] = element.attrib.get("unit", "s")
+    def find(element_name: str) -> str:
+        element = find_el(element_name)
+        return element.text or ""
+
+    def as_date(date_str: str) -> datetime.date:
+        return datetime.date.fromisoformat(date_str)
+
+    data = BulletinDInfo(
+        date=as_date(find("date")),
+        start_date=as_date(find("startDate")),
+        start_utc=float(find("startUTC")),
+        number=int(find("number")),
+        dut1=float(find("DUT1")),
+        dut1_unit=find_el("DUT1").attrib.get("unit", "s"),
+    )
 
     with open(tmp_loc, "wt", encoding="utf-8") as data_file:
-        print(json.dumps(data), file=data_file)
+        print(data.to_json(indent=4), file=data_file)
         data_file.close()
         os.rename(tmp_loc, loc)
         print(data)
-        return typing.cast(BulletinDInfo, data)
+        return data
 
 
 def get_bulletin_d_data(
@@ -101,6 +121,6 @@ def get_cached_bulletin_d_data() -> list[BulletinDInfo]:
 
     def content(filename: pathlib.Path) -> BulletinDInfo:
         with open(filename, "r", encoding="utf-8") as data_file:
-            return typing.cast(BulletinDInfo, json.load(data_file))
+            return BulletinDInfo.from_json(data_file.read())
 
     return [content(p) for path in DATA_PATHS for p in path.glob("*.json")]

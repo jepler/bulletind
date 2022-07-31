@@ -1,1 +1,8 @@
-{"number": 125, "date": "2015-09-11", "startdate": "2015-09-17", "dut1": 0.2, "startutc": 0.0, "dut1_unit": "s"}
+{
+    "date": "2015-09-11",
+    "dut1": 0.2,
+    "dut1_unit": "s",
+    "number": 125,
+    "start_date": "2015-09-17",
+    "start_utc": 0.0
+}

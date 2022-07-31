@@ -7,12 +7,10 @@
 """Commandline interface to 'Bulletin D' data"""
 import json
 import pathlib
-import sys
-import typing
 
 import click
 
-from . import get_bulletin_d_data, get_cached_bulletin_d_data
+from . import BulletinDInfo, get_bulletin_d_data, get_cached_bulletin_d_data
 
 
 @click.command()
@@ -35,9 +33,9 @@ def main(cache_only: bool, update_package_data: bool) -> None:
             data = get_cached_bulletin_d_data()
         else:
             data = get_bulletin_d_data()
-        data = sorted(data, key=lambda x: typing.cast(float, x.get("number", 0)))
-        json.dump(data, indent=4, fp=sys.stdout)
-        print()
+        data = sorted(data, key=lambda x: x.number)
+        json_data = BulletinDInfo.schema().dump(data, many=True)
+        print(json.dumps(json_data, indent=4))
 
 
 if __name__ == "__main__":

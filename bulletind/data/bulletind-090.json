@@ -1,1 +1,8 @@
-{"number": 90, "date": "2004-03-24", "startdate": "2004-04-29", "dut1": -0.5, "startutc": 0.0, "dut1_unit": "s"}
+{
+    "date": "2004-03-24",
+    "dut1": -0.5,
+    "dut1_unit": "s",
+    "number": 90,
+    "start_date": "2004-04-29",
+    "start_utc": 0.0
+}

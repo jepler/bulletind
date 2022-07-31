@@ -1,1 +1,8 @@
-{"number": 62, "date": "1996-06-17", "startdate": "1996-08-08", "dut1": 0.1, "startutc": 0.0, "dut1_unit": "s"}
+{
+    "date": "1996-06-17",
+    "dut1": 0.1,
+    "dut1_unit": "s",
+    "number": 62,
+    "start_date": "1996-08-08",
+    "start_utc": 0.0
+}

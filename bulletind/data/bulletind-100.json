@@ -1,1 +1,8 @@
-{"number": 100, "date": "2008-07-02", "startdate": "2008-08-07", "dut1": -0.5, "startutc": 0.0, "dut1_unit": "s"}
+{
+    "date": "2008-07-02",
+    "dut1": -0.5,
+    "dut1_unit": "s",
+    "number": 100,
+    "start_date": "2008-08-07",
+    "start_utc": 0.0
+}
