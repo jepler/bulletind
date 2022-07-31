@@ -24,7 +24,7 @@ from marshmallow import fields
 BULLETIN_D_INDEX = "https://datacenter.iers.org/availableVersions.php?id=17"
 
 DATA_PATHS = [
-    platformdirs.user_cache_path(appname="wwvbpy"),
+    platformdirs.user_cache_path(appname="bulletind"),
     pathlib.Path(__file__).resolve().parent / "data",
 ]
 

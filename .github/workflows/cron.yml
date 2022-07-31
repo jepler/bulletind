@@ -2,7 +2,7 @@
 #
 # SPDX-License-Identifier: CC0-1.0
 
-name: Update DUT1 data
+name: Update Bulletin D data
 
 on:
   schedule:
