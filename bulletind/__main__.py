@@ -52,7 +52,8 @@ def table() -> None:
         opt_ls = "LS" if (start.dut1 * end.dut1 < 0) else "  "
         print(
             f"{start.start_date} {start.dut1: 4.1f} {daycount:4} {opt_ls} "
-            f"# Bulletin {start.number:4} issued {start.date}"
+            f"# Bulletin {start.number:4} issued {start.date}, "
+            f"{(start.start_date - start.date).days} early"
         )
     if end is not None:
         print(f"{end.start_date} {end.dut1: 4.1f}")
