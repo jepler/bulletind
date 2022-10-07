@@ -1,6 +1,8 @@
 #!/usr/bin/python3
 """Retrieve 'bulletin D' data"""
+from __future__ import annotations
 
+import bisect
 import datetime
 import json
 import os
@@ -128,3 +130,12 @@ def get_cached_bulletin_d_data() -> list[BulletinDInfo]:
         (content(p) for path in DATA_PATHS for p in path.glob("*.json")),
         key=attrgetter("start_date"),
     )
+
+
+def get_bulletin_d_by_date(date: datetime.date) -> BulletinDInfo | None:
+    """Return the Bulletin D effective on the given date"""
+    data = get_cached_bulletin_d_data()
+    idx = bisect.bisect([d.start_date for d in data], date)
+    if idx == 0:  # len(data):
+        return None
+    return data[idx - 1]
