@@ -41,6 +41,6 @@ YYYY-mm-dd.
 
 # Development status
 
-The author (@jepler) occasionally develops and maintains this project, but
-issues are not likely to be acted on.  They would be interested in adding
-co-maintainer(s).
+This project was started as a way to prototype use of Bulletin D historical
+data in wwvbgen. However, the quality of the historical data was not adequate
+and the project is archived.
