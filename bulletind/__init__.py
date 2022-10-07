@@ -9,6 +9,7 @@ import sys
 import typing
 import xml.etree.ElementTree
 from dataclasses import dataclass, field
+from operator import attrgetter
 
 import bs4
 import platformdirs
@@ -123,4 +124,7 @@ def get_cached_bulletin_d_data() -> list[BulletinDInfo]:
         with open(filename, "r", encoding="utf-8") as data_file:
             return BulletinDInfo.from_json(data_file.read())
 
-    return [content(p) for path in DATA_PATHS for p in path.glob("*.json")]
+    return sorted(
+        (content(p) for path in DATA_PATHS for p in path.glob("*.json")),
+        key=attrgetter("start_date"),
+    )
